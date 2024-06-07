@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+option csharp_namespace = "gRPC.API.Server.Protos";
+
+service InventoryService {
+    rpc GetProductById(ProductIdRequest) returns (ProductServiceMessage);
+    rpc AddProduct(Product) returns (ProductServiceMessage);
+    rpc UpdateProduct(Product) returns (ProductServiceMessage);
+
+    rpc AddBulkProd(stream Product) returns(NumOfInsertedRowsMsg);
+    rpc GetProductsByCriteria(ProductCriteriaMsg) returns (stream Product);
+}
+
+message ProductIdRequest {
+    int32 id = 1;
+}
+
+message ProductServiceMessage {
+    bool status = 1;
+    string message = 2;
+    Product product = 3;
+}
+
+message NumOfInsertedRowsMsg {
+    int32 numOfInsertedRows = 1;
+}
+
+message ProductCriteriaMsg {
+    Category category = 1; // Optional: filter by category
+    bool orderByPrice = 2;
+}
+
+message Product {
+    int32 id = 1;
+    string name = 2;
+    double price = 3;
+    int32 qty = 4;
+    Category category = 5;
+}
+
+enum Category {
+    UNKNOWN = 0;
+    ELECTRONICS = 1;
+    COMPUTER_ACCESSORIES = 2;
+    AUDIO = 3;
+    MONITORS = 4;
+    STORAGE = 5;
+    OTHER = 6;
+}
